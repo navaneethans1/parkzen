@@ -134,6 +134,7 @@
 		autocomplete.bindTo('bounds', map);
 		autocomplete.setOptions({strictBounds: true});
 
+
       }
 
 
@@ -162,28 +163,17 @@
       	$(".map-box").fadeIn();
       })
 	  
-
-
-
-
-	  // Geocoding
-	 geocoder = new google.maps.Geocoder();
-
-	function codeAddress() {
-   	 var address = document.getElementById('autocomplete').value;
-	    geocoder.geocode( { 'address': address}, function(results, status) {
-	      if (status == 'OK') {
-	        map.setCenter(results[0].geometry.location);
-	        var marker = new google.maps.Marker({
-	            map: map,
-	            position: results[0].geometry.location
-	        });
-	      } else {
-	        alert('Geocode was not successful for the following reason: ' + status);
-	      }
-	    });
-	  }
-
+      $("#search").click(function(){
+      	var address = $("#autocomplete").val();
+	 	$.ajax({
+			type:"POST",
+			data: {'address' : address },
+			url: "/get_time_slots/",
+			success: function(data){
+				console.log(data);
+			}
+		});
+	 });
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAUyjrixhINVBCtKpOegkjixG7DovoOnmE&libraries=places&callback=initMap"
     async defer></script>
