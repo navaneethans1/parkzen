@@ -1,5 +1,4 @@
-/Users/navaneethan/Documents/courses/parkzen/app/__pycache__/*
-miigrations/
+migrations/
 parkzen/settings.py
 *.pyc
-notebooks/.ipynb_checkpoints/*
+notebooks/.ipynb_checkpoints/*.ipynb
