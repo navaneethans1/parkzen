@@ -21,14 +21,18 @@ def search(request):
 def get_time_slots(request):
     if request.method == "POST":
         position = request.POST['address'].lower()
+        start = request.POST['start']
+        end = request.POST['end']
         geocode_result = gmaps.geocode(position)
-        time_slots = TimeSlot.objects.all()
+        time_slots = TimeSlot.objects.filter(start__gte=start, end__lte=end)
         data = geocode_result[0]
         available_slots = []
-        print(geocode_result[0])
+        i = 1
         for time_slot in time_slots:
-            if ((abs(time_slot.location.lat - data['geometry']['location']['lat'])<0.5)
-                    and (abs(time_slot.location.lon - data['geometry']['location']['lng'])<0.5)):
+            if ((abs(time_slot.location.lat - data['geometry']['location']['lat']) < 0.005)
+                    and (abs(time_slot.location.lon - data['geometry']['location']['lng']) < 0.005)):
+                time_slot.id = i
+                i += 1
                 available_slots.append(time_slot)
-        print(available_slots)
-        return HttpResponse("available_slots")
+        return render(request, 'slots-user-table.html',
+                      {'available_slots': available_slots})

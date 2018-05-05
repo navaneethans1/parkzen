@@ -1,0 +1,28 @@
+<table id="example" class="table table-striped table-bordered" style="width:100%">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Address</th>
+            <th>Time Slot</th>
+            <th>Price</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for slot in available_slots %}
+            <tr>
+                <td>{{slot.id}}</td>
+                <td>{{slot.location.address}}</td>
+                <td>{{slot.start}} to {{slot.end}}</td>
+                <td>{{slot.rate}}/hour</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+    <tfoot>
+    <tr>
+        <th>#</th>
+        <th>Address</th>
+        <th>Time Slot</th>
+        <th>Price</th>
+    </tr>
+    </tfoot>
+</table>
