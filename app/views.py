@@ -9,3 +9,11 @@ from app.models import *
 def search(request):
     locations = Location.objects.all()
     return render(request, 'search.html', {'locations': locations})
+
+
+def get_time_slots(request):
+    if request.method == "POST":
+        location_str = request.POST['location_str'].lower()
+        print (location_str)
+
+

@@ -21,4 +21,4 @@ class TimeSlot(models.Model):
     rate = models.IntegerField()
 
     def __str__(self):
-        return self.location.address + ": " + self.rate
+        return self.location.address + ": " + str(self.rate)

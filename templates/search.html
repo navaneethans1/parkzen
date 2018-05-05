@@ -30,6 +30,7 @@
       	position: relative;
       	top:50px;
       	height: 80%;
+      	display: none;
       }
     </style>
   </head>
@@ -38,7 +39,7 @@
   		<div class="row">
   			<div class="col-md-10">
 				<div class="form-group">
-    				<input type="text" class="form-control" placeholder="Enter your destination">
+    				<input id="autocomplete" type="text" class="form-control" placeholder="Enter your destination">
   				</div>
   			</div>
   			<div class="col-md-2">
@@ -111,8 +112,37 @@
           		title: parking.title
         	});
         });
+
+        // Autocomplete
+        var input = document.getElementById('autocomplete');
+        autocomplete = new google.maps.places.Autocomplete(input);
+
+        if (navigator.geolocation) {
+	    	navigator.geolocation.getCurrentPosition(function(position) {
+		      var geolocation = {
+		        lat: position.coords.latitude,
+		        lng: position.coords.longitude
+		      };
+		      var circle = new google.maps.Circle({
+		        center: geolocation,
+		        radius: position.coords.accuracy
+		      });
+		      autocomplete.setBounds(circle.getBounds());
+		    });
+		  }
+
+		autocomplete.bindTo('bounds', map);
+		autocomplete.setOptions({strictBounds: true});
+
       }
 
+
+
+
+
+
+
+      // Error handling
       function handleLocationError(browserHasGeolocation, infoWindow, pos) {
         infoWindow.setPosition(pos);
         infoWindow.setContent(browserHasGeolocation ?
@@ -131,7 +161,30 @@
       	$(".search-results").hide();
       	$(".map-box").fadeIn();
       })
+	  
+
+
+
+
+	  // Geocoding
+	 geocoder = new google.maps.Geocoder();
+
+	function codeAddress() {
+   	 var address = document.getElementById('autocomplete').value;
+	    geocoder.geocode( { 'address': address}, function(results, status) {
+	      if (status == 'OK') {
+	        map.setCenter(results[0].geometry.location);
+	        var marker = new google.maps.Marker({
+	            map: map,
+	            position: results[0].geometry.location
+	        });
+	      } else {
+	        alert('Geocode was not successful for the following reason: ' + status);
+	      }
+	    });
+	  }
+
     </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAUyjrixhINVBCtKpOegkjixG7DovoOnmE&callback=initMap"
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAUyjrixhINVBCtKpOegkjixG7DovoOnmE&libraries=places&callback=initMap"
     async defer></script>
 </html>
