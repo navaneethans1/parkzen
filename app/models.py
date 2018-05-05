@@ -3,9 +3,9 @@ from django.contrib.auth.models import User
 
 
 class Location(models.Model):
-    address = models.TextField()
-    lat = models.CharField(max_length=12)
-    lon = models.CharField(max_length=12)
+    address = models.TextField(default='176 Dollars Colony, Bannerghatta Main Road, Phase 4 JP Nagar, Bengaluru, Karnataka 560076')
+    lat = models.FloatField(max_length=10, default=12.9039462)
+    lon = models.FloatField(max_length=10, default=77.5990953)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -18,7 +18,7 @@ class TimeSlot(models.Model):
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, blank=True, null=True)
     location = models.ForeignKey(Location, on_delete=models.CASCADE)
-    rate = models.CharField(max_length=8)
+    rate = models.IntegerField()
 
     def __str__(self):
-        return self.location.address + "-" + self.rate
+        return self.location.address + ": " + self.rate
