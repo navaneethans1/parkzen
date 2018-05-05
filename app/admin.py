@@ -3,7 +3,7 @@ from app.models import *
 
 
 class LocationAdmin(admin.ModelAdmin):
-    fields = ('user', 'lat', 'lon')
+    fields = ('address', 'user', 'lat', 'lon')
 
 
 admin.site.register(Location, LocationAdmin)
