@@ -2,3 +2,4 @@
 miigrations/
 parkzen/settings.py
 *.pyc
+notebooks/.ipynb_checkpoints/*
