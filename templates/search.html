@@ -141,7 +141,14 @@
 	});
 	map.setCenter(pos);
 	}, function() {
-		handleLocationError(true, infoWindow, map.getCenter());
+		origin_marker = new google.maps.Marker({
+		position: {lat:12.903941, lng:77.59909},
+		map: map,
+		title: "Vehicle location",
+		draggable: true,
+		icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
+	});
+		// handleLocationError(true, infoWindow, map.getCenter());
 	});
 	} else {
 		origin_marker = new google.maps.Marker({
