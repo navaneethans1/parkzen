@@ -57,4 +57,3 @@ def get_time_slots(request):
 #         if not if not request.POST['slot_id']:
 #             return HttpResponse("Please select slot")
 #         user = User.objects.get()
-

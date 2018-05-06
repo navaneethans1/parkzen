@@ -77,6 +77,9 @@
 						<button class="btn btn-primary mb-2" style="width: 100%" id="search">Get parking</button>
 					</div>
 				</div>
+				<div class="alert alert-success" id="success" role="alert" style="text-align: center;display: none;">
+  					Your parking spot is successfully reserved!
+				</div>
 		</div>
 		<div class="container map-box">
 			<div id="map"></div>
@@ -104,6 +107,7 @@
 	<script>
 	var map, infoWindow;
 	var origin_marker = false;
+	var marker2 = false;
 	// Getting data of parkings locations from backend
 	var markers = [];
 	{% for location in locations %}
@@ -122,7 +126,7 @@
 	});
 	// Setting device location
 	infoWindow = new google.maps.InfoWindow;
-	if (navigator.geolocation) { // Try HTML5 geolocation.
+	if (!navigator.geolocation) { // Try HTML5 geolocation.
 		navigator.geolocation.getCurrentPosition(function(position) {
 	var pos = {
 		lat: position.coords.latitude,
@@ -140,8 +144,15 @@
 		handleLocationError(true, infoWindow, map.getCenter());
 	});
 	} else {
+		origin_marker = new google.maps.Marker({
+		position: {lat:12.903941, lng:77.59909},
+		map: map,
+		title: "Vehicle location",
+		draggable: true,
+		icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
+	});
 	// Browser doesn't support Geolocation
-		handleLocationError(false, infoWindow, map.getCenter());
+		// handleLocationError(false, infoWindow, map.getCenter());
 	}
 	// Generating Markers
 	markers.forEach(function(parking, index){
@@ -175,22 +186,24 @@
 	//Listen for any clicks on the map.
     google.maps.event.addListener(map, 'click', function(event) {                
         //Get the location that the user clicked.
-        var clickedLocation = event.latLng;
+        clickedLocation = event.latLng;
         //If the marker hasn't been added.
-        if(origin_marker === false){
+        if(marker2 === false){
             //Create the marker.
-            origin_marker = new google.maps.Marker({
+            marker2 = new google.maps.Marker({
                 position: clickedLocation,
                 map: map,
+                title: "Destination",
+                icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png',
                 draggable: true //make it draggable
             });
             //Listen for drag events!
-            google.maps.event.addListener(origin_marker, 'dragend', function(event){
+            google.maps.event.addListener(marker2, 'dragend', function(event){
                 markerLocation();
             });
         } else{
             //Marker has already been added, so just change its location.
-            origin_marker.setPosition(clickedLocation);
+            marker2.setPosition(clickedLocation);
         }
         //Get the marker's location.
         markerLocation();
@@ -237,6 +250,23 @@
 
 
 	$("#search").click(function(){
+	if(marker2 === false){
+            //Create the marker.
+            marker2 = new google.maps.Marker({
+                position: clickedLocation,
+                map: map,
+                title: "Destination",
+                icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png',
+                draggable: true //make it draggable
+            });
+            //Listen for drag events!
+            google.maps.event.addListener(marker2, 'dragend', function(event){
+                markerLocation();
+            });
+        } else{
+            //Marker has already been added, so just change its location.
+            marker2.setPosition(clickedLocation);
+        };
 	$(".slots-table").html('<div style="text-align: center;"><img src="{% static "Pacman.gif" %}" alt="Loading.."></div>');
 	var address = $("#autocomplete").val();
 	var start = $("#start-time").val();
@@ -276,6 +306,36 @@
 		forceParse: 0,
 		showMeridian: 1
 	});
+
+
+	// Directions api
+	function show_destination(destination){
+
+		directionsDisplay = new google.maps.DirectionsRenderer({
+          		map: map
+        });
+
+        request = {
+          		destination: destination,
+          		origin: origin_marker.getPosition(),
+          		travelMode: 'DRIVING',
+          		drivingOptions: {
+    				departureTime: new Date(Date.now())
+  				}
+       		}
+
+       	directionsService = new google.maps.DirectionsService();
+	        directionsService.route(request, function(response, status) {
+	          if (status == 'OK') {
+	            // Display the route on the map.
+	            directionsDisplay.setDirections(response);
+	          }
+	        });
+
+	        $(".search-results").hide();
+	        $(".map-box").fadeIn();
+	        $("#success").fadeIn();
+	}
 	</script>
 	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAUyjrixhINVBCtKpOegkjixG7DovoOnmE&libraries=places&callback=initMap"
 	async defer></script>

@@ -43,13 +43,13 @@
                         <ul>
                             <li>Address: {{slot.location.address}}</li>
                             <li>Time Slot: {{slot.start}} to {{slot.end}}</li>
-                            <li>Distance: <b>{{slot.distance}}</b></li>
+                            <li><b>Distance from destination: {{slot.distance}}</b></li>
                             <li>Duration: <b>{{slot.duration}}</b></li>
                             <li>Rate: {{slot.rate}}/hour</li>
                         </ul>
                     </p>
                     <div style="text-align: center;">
-                    <a href="#" class="btn btn-primary book-slot" id="{{slot.id}}">Book this spot</a>
+                    <a href="#" class="btn btn-primary book-slot" id="{{slot.id}}" lat="{{slot.location.lat}}" lon="{{slot.location.lon}}">Book this spot</a>
                     </div>
                 </div>
             </div>
@@ -58,9 +58,12 @@
     {% endfor %}
 </div>
 <script>
-    // $(".book-slot").click(function(){
-    //     var slot_id = $(this).val();
-    //     console.log(slot_id);
-        
-    // });
+    $(".book-slot").click(function(event){
+        event.preventDefault();
+        var slot_id = $(this).attr("id");
+        var park_spot = { lat: parseFloat($(this).attr("lat")), lng: parseFloat($(this).attr("lon")) };
+        console.log(park_spot);
+        console.log(slot_id);
+        show_destination(park_spot);
+    });
 </script>
