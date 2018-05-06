@@ -110,6 +110,7 @@
 	var marker2 = false;
 	// Getting data of parkings locations from backend
 	var markers = [];
+	var markers2 = [];
 	{% for location in locations %}
 			var address = "{{location.address|safe}}";
 			var lat = "{{location.lat|safe}}";
@@ -168,6 +169,8 @@
 		map: map,
 		title: parking.title
 	});
+
+	markers2.push(marker);
 	});
 	// Autocomplete
 	var input = document.getElementById('autocomplete');
@@ -201,7 +204,7 @@
                 position: clickedLocation,
                 map: map,
                 title: "Destination",
-                icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png',
+                icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
                 draggable: true //make it draggable
             });
             //Listen for drag events!
@@ -263,7 +266,7 @@
                 position: clickedLocation,
                 map: map,
                 title: "Destination",
-                icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png',
+                icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
                 draggable: true //make it draggable
             });
             //Listen for drag events!
@@ -317,7 +320,7 @@
 
 	// Directions api
 	function show_destination(destination){
-
+		setMapOnAll(null);
 		directionsDisplay = new google.maps.DirectionsRenderer({
           		map: map
         });
@@ -342,7 +345,13 @@
 	        $(".search-results").hide();
 	        $(".map-box").fadeIn();
 	        $("#success").fadeIn();
-	}
+	};
+
+	function setMapOnAll (map){
+        for (var i = 0; i < markers.length; i++) {
+          markers2[i].setMap(map);
+        }
+      };
 	</script>
 	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAUyjrixhINVBCtKpOegkjixG7DovoOnmE&libraries=places&callback=initMap"
 	async defer></script>
