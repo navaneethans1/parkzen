@@ -1,4 +1,4 @@
-<table id="example" class="table table-striped table-bordered" style="width:100%">
+<!-- <table id="example" class="table table-striped table-bordered" style="width:100%">
     <thead>
         <tr>
             <th>Slot ID</th>
@@ -31,4 +31,36 @@
         <th>Price</th>
     </tr>
     </tfoot>
-</table>
+</table> -->
+<div class="row">
+    {% for slot in available_slots %}
+        <div class="col-md-3">
+            <div class="card" style="width: 100%; height: 300px">
+                <!-- <img class="card-img-top" src=".../100px180/" alt="Card image cap"> -->
+                <div class="card-body">
+                    <h5 class="card-title">PARK-{{slot.id}}</h5>
+                    <p class="card-text">
+                        <ul>
+                            <li>Address: {{slot.location.address}}</li>
+                            <li>Time Slot: {{slot.start}} to {{slot.end}}</li>
+                            <li>Distance: <b>{{slot.distance}}</b></li>
+                            <li>Duration: <b>{{slot.duration}}</b></li>
+                            <li>Rate: {{slot.rate}}/hour</li>
+                        </ul>
+                    </p>
+                    <div style="text-align: center;">
+                    <a href="#" class="btn btn-primary book-slot" id="{{slot.id}}">Book this spot</a>
+                    </div>
+                </div>
+            </div>
+            <br>
+        </div>
+    {% endfor %}
+</div>
+<script>
+    // $(".book-slot").click(function(){
+    //     var slot_id = $(this).val();
+    //     console.log(slot_id);
+        
+    // });
+</script>
