@@ -126,7 +126,7 @@
 	});
 	// Setting device location
 	infoWindow = new google.maps.InfoWindow;
-	if (!navigator.geolocation) { // Try HTML5 geolocation.
+	if (navigator.geolocation) { // Try HTML5 geolocation.
 		navigator.geolocation.getCurrentPosition(function(position) {
 	var pos = {
 		lat: position.coords.latitude,
