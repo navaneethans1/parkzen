@@ -20,6 +20,8 @@ def search(request):
 @csrf_exempt
 def get_time_slots(request):
     if request.method == "POST":
+        if not request.POST['address'] and request.POST['start'] and request.POST['end']:
+            HttpResponse("Please select preferences")
         position = request.POST['address'].lower()
         start = request.POST['start']
         end = request.POST['end']
@@ -27,12 +29,14 @@ def get_time_slots(request):
         time_slots = TimeSlot.objects.filter(start__gte=start, end__lte=end)
         data = geocode_result[0]
         available_slots = []
-        i = 1
         for time_slot in time_slots:
-            if ((abs(time_slot.location.lat - data['geometry']['location']['lat']) < 0.005)
-                    and (abs(time_slot.location.lon - data['geometry']['location']['lng']) < 0.005)):
-                time_slot.id = i
-                i += 1
+            if ((abs(time_slot.location.lat - data['geometry']['location']['lat']) < 0.01)
+                    and (abs(time_slot.location.lon - data['geometry']['location']['lng']) < 0.01)):
+                distance = gmaps.distance_matrix(origins=position, destinations=data['geometry']['location'], mode="driving")
+                time_slot.distance = distance['rows'][0]['elements'][0]['distance']['text']
+                time_slot.duration = distance['rows'][0]['elements'][0]['duration']['text']
                 available_slots.append(time_slot)
+        if len(available_slots) <= 0:
+            return HttpResponse("No available parking slots :(")
         return render(request, 'slots-user-table.html',
                       {'available_slots': available_slots})
