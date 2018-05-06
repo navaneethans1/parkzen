@@ -32,7 +32,7 @@ def get_time_slots(request):
         for time_slot in time_slots:
             if ((abs(time_slot.location.lat - data['geometry']['location']['lat']) < 0.01)
                     and (abs(time_slot.location.lon - data['geometry']['location']['lng']) < 0.01)):
-                distance = gmaps.distance_matrix(origins=position, destinations=data['geometry']['location'], mode="driving")
+                distance = gmaps.distance_matrix(origins={'lat':time_slot.location.lat, 'lng':time_slot.location.lon}, destinations=data['geometry']['location'], mode="driving")
                 time_slot.distance = distance['rows'][0]['elements'][0]['distance']['text']
                 time_slot.duration = distance['rows'][0]['elements'][0]['duration']['text']
                 available_slots.append(time_slot)
